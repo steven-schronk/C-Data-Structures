@@ -6,36 +6,36 @@
 
 Head *list_new()
 {
-	Head *head = malloc(sizeof(Head));
-	if (head == NULL)
+	Head *pHead = malloc(sizeof(Head));
+	if (pHead == NULL)
 		return NULL;
-	head->count = 0;
-	return head;
+	pHead->count = 0;
+	return pHead;
 }
 
-int list_delete(Head *list)
+int list_delete(Head *pHead)
 {
 	return 0;
 }
 
 /* find current length of list */
-int list_length(Head *list)
+int list_length(Head *pHead)
 {
-	return list->count;
+	return pHead->count;
 }
 
-int list_empty(Head *list)
+int list_empty(Head *pHead)
 {
-	if(list->count == 0)
+	if(pHead->count == 0)
 		return true;
 	return false;
 }
 
-Node *list_next(Head *list)
+Node *list_next(Head *pHead)
 {
-	if(list->pNode == NULL)
+	if(pHead->pNode == NULL)
 		return false;
-	return list->pNode;
+	return pHead->pNode;
 }
 
 Node *list_push(Head *pHead)
@@ -55,11 +55,11 @@ Node *list_push(Head *pHead)
 	return node;
 }
 
-int list_remove(Head *list, int count)
+int list_remove(Head *pHead, int count)
 {
-	Node *pLastNode = list->pNode;
+	Node *pLastNode = pHead->pNode;
 	Node *pNextNode = pLastNode;
-	if(list == NULL || count > list->count)
+	if(pHead == NULL || count > pHead->count)
 		return -1;
 
 	while(count > 1)
@@ -71,7 +71,7 @@ int list_remove(Head *list, int count)
 
 	pLastNode->pNext = pNextNode->pNext;
 	free(pNextNode);
-	list->count--;
+	pHead->count--;
 	return 0;
 }
 
