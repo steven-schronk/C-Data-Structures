@@ -11,7 +11,7 @@
 
 void exit_error(const char *err_msg)
 {
-	fprintf(stderr, "ERROR %s\n", err_msg);
+	fprintf(stderr, "ERROR: %s\n", err_msg);
 	/*
 	if(pInfile != NULL) { fclose(pInfile); }
 	if(pOutfile != NULL) { fclose(pOutfile); }
@@ -38,8 +38,8 @@ void test_msg_end(int pass)
 	{
 		printf("PASSED\n");
 	} else {
-		printf("FAILED\n");
-		exit_error("UNIT TESTING FAILED");
+		printf("FAILED\n\n");
+		exit_error("UNIT TESTING FAILED.\n\n");
 	}
 }
 
