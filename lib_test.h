@@ -14,7 +14,6 @@ void test_msg_end(int);
 
 int test_ll_new();
 
-
 int test_all();
 
 #endif /* LIB_TEST_H_ */

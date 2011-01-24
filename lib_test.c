@@ -1,7 +1,10 @@
+#include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #include "lib_test.h"
 #include "lib_ll.h"
@@ -12,6 +15,8 @@
 
 #define PASSED 0
 #define FAILED 1
+
+#define SORT_TESTS 1000
 
 void exit_error(const char *err_msg)
 {
@@ -393,6 +398,168 @@ int test_vqueue()
 	return result;
 }
 
+/* test outcome of sort algorithm - all data should be sorted */
+int test_sort_data(int data[], int lo, int hi)
+{
+	int i = lo, result = 0;
+	while(i < hi)
+	{
+		if(!(data[i] <= data[i+1])) result++;
+		i++;
+	}
+	return result;
+}
+
+/* test specific position of data */
+int test_sort_data_loc(int data[])
+{
+	int i = 0, result = 0;
+	while(i < 10) {
+		if(data[i] != i) result++;
+		i++;
+	}
+	return result;
+}
+
+/* generate random number from min to max */
+int random_int(int min, int max)
+{
+	assert(min > INT_MIN);
+	assert(max < INT_MAX/2);
+	assert(max >= min);
+	return rand() % max + min;
+}
+
+/* use clock in system to create random seed for number generator */
+void seed_rand()
+{
+	srand(time(0));
+}
+
+/* set pre-selected data in array */
+void sort_set_array(int data[])
+{
+	assert(data != NULL);
+	data[0] = 4;
+	data[1] = 5;
+	data[2] = 7;
+	data[3] = 9;
+	data[4] = 8;
+	data[5] = 1;
+	data[6] = 6;
+	data[7] = 0;
+	data[8] = 3;
+	data[9] = 2;
+}
+
+/* fill random length array with random data */
+void sort_rnd_data_fill(int *data, int length, int min, int max)
+{
+	int i = 0;
+	seed_rand();
+	while(i < length) {
+		data[i]= random_int(min, max);
+		i++;
+	}
+}
+
+int test_sort()
+{
+	int i, result = 0, length, min_data_val, max_data_val;
+	int *temp_data;
+	int data[10];
+
+	test_msg_start("Test Selection Sort - Preset Array");
+		sort_set_array(data);
+		sort_selection(data, 0, 9);
+		result += test_sort_data(data, 0, 9);
+		result += test_sort_data_loc(data);
+	test_msg_end(result);
+
+	test_msg_start("Test Selection Sort - Random Data");
+		for(i = 0; i < SORT_TESTS; i++) {
+			seed_rand();
+			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
+			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
+			length = random_int(1, 1000); /* get length of a new array */
+			temp_data = malloc(sizeof(int) * length);
+			sort_rnd_data_fill(temp_data, length, min_data_val, max_data_val);
+			sort_selection(temp_data, 0, length);
+			result += test_sort_data(temp_data, 0, length);
+			free(temp_data);
+			temp_data = NULL;
+		}
+	test_msg_end(result);
+
+	test_msg_start("Test Insertion Sort - Preset Array");
+		sort_set_array(data);
+		sort_insertion(data, 0, 9);
+		result += test_sort_data(data, 0, 9);
+		result += test_sort_data_loc(data);
+	test_msg_end(result);
+
+	test_msg_start("Test Insertion Sort - Random Data");
+		for(i = 0; i < SORT_TESTS; i++) {
+			seed_rand();
+			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
+			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
+			length = random_int(1, 1000); /* get length of a new array */
+			temp_data = malloc(sizeof(int) * length);
+			sort_rnd_data_fill(temp_data, length, min_data_val, max_data_val);
+			sort_insertion(temp_data, 0, length);
+			result += test_sort_data(temp_data, 0, length);
+			free(temp_data);
+			temp_data = NULL;
+		}
+	test_msg_end(result);
+
+	test_msg_start("Test Quick Sort (Recursive) - Preset Array");
+		sort_set_array(data);
+		sort_quick(data, 0, 9);
+		result += test_sort_data(data, 0, 9);
+		result += test_sort_data_loc(data);
+	test_msg_end(result);
+
+	test_msg_start("Test Quick Sort (Recursive) - Random Data");
+		for(i = 0; i < SORT_TESTS; i++) {
+			seed_rand();
+			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
+			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
+			length = random_int(1, 1000); /* get length of a new array */
+			temp_data = malloc(sizeof(int) * length);
+			sort_rnd_data_fill(temp_data, length, min_data_val, max_data_val);
+			sort_quick(temp_data, 0, length);
+			result += test_sort_data(temp_data, 0, length);
+			free(temp_data);
+			temp_data = NULL;
+		}
+	test_msg_end(result);
+
+	test_msg_start("Test Quick Sort - Preset Array");
+		sort_set_array(data);
+		sort_quick_norecurse(data, 0, 9);
+		result += test_sort_data(data, 0, 9);
+		result += test_sort_data_loc(data);
+	test_msg_end(result);
+
+	test_msg_start("Test Quick Sort - Random Data");
+		for(i = 0; i < SORT_TESTS; i++) {
+			seed_rand();
+			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
+			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
+			length = random_int(1, 1000); /* get length of a new array */
+			temp_data = malloc(sizeof(int) * length);
+			sort_rnd_data_fill(temp_data, length, min_data_val, max_data_val);
+			sort_quick_norecurse(temp_data, 0, length);
+			result += test_sort_data(temp_data, 0, length);
+			free(temp_data);
+			temp_data = NULL;
+		}
+	test_msg_end(result);
+
+	return result;
+}
+
 int test_stack_array()
 {
 	int result = 0;
@@ -407,6 +574,7 @@ int test_all()
 	result += test_stack_array();
 	result += test_vstack();
 	result += test_vqueue();
+	result += test_sort();
 	return result;
 }
 
