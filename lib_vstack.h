@@ -10,6 +10,9 @@
 /* push node onto stack */
 #define vstack_push(pHead) list_ins_head(pHead)
 
+/* push node onto stack - with data */
+#define vstack_push_data(pHead, pData) list_ins_head_data(pHead, pData)
+
 /* remove node from stack */
 #define vstack_pop(pHead) list_rm_node(pHead, pHead->pNext)
 

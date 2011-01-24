@@ -5,6 +5,8 @@
 
 #include "lib_test.h"
 #include "lib_ll.h"
+#include "lib_sort.h"
+#include "lib_vbtree.h"
 #include "lib_vqueue.h"
 #include "lib_vstack.h"
 

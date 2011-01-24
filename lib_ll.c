@@ -74,6 +74,13 @@ List_Node *list_ins_head(List_Head *pHead)
 	return pNode;
 }
 
+List_Node *list_ins_head_data(List_Head *pHead, void *Data)
+{
+	List_Node *temp = list_ins_head(pHead);
+	temp->pData = Data;
+	return temp;
+}
+
 List_Node *list_ins_tail(List_Head *pHead)
 {
 	List_Node *pTemp = pHead->pNext;

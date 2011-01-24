@@ -27,6 +27,8 @@ typedef struct list_node {
 	struct list_node *pNext;
 } List_Node;
 
+
+
 typedef struct {
 	struct list_node *pNext;
 	int count;
@@ -55,6 +57,9 @@ void list_print(List_Head *);
 
 /* push new node on head of list */
 List_Node *list_ins_head(List_Head *);
+
+/* push new node on head of list - with data */
+List_Node *list_ins_head_data(List_Head *pHead, void *Data);
 
 /* push new node on tail of list */
 List_Node *list_ins_tail(List_Head *);
