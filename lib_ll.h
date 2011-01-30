@@ -1,6 +1,16 @@
 #ifndef LIB_LL_H_
 #define LIB_LL_H_
 
+typedef struct list_node {
+	void *pData;
+	struct list_node *pNext;
+} List_Node;
+
+typedef struct {
+	struct list_node *pNext;
+	int count;
+} List_Head;
+
 /* return address of next node in list */
 #define list_next(element) ((element)->pNext)
 
@@ -21,18 +31,6 @@
 
 /* return integer value of the size of the list */
 #define list_size(list) ((list)->count)
-
-typedef struct list_node {
-	void *pData;
-	struct list_node *pNext;
-} List_Node;
-
-
-
-typedef struct {
-	struct list_node *pNext;
-	int count;
-} List_Head;
 
 /* create new empty list */
 List_Head *list_new(void);

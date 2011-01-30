@@ -7,7 +7,9 @@
 #include <time.h>
 
 #include "lib_test.h"
+#include "lib_hash.h"
 #include "lib_ll.h"
+#include "lib_random.h"
 #include "lib_sort.h"
 #include "lib_vbtree.h"
 #include "lib_vqueue.h"
@@ -49,6 +51,22 @@ void test_msg_end(int pass)
 }
 
 /* unit tests begin here */
+
+int test_random()
+{
+	int i, j, result = 0;
+	test_msg_start("Test Random Number Generator - Integers 0 to 100");
+		random_seed();
+		j = 0;
+		while(j < 1000) {
+			i = random_int(0,100);
+			if(i < 0 || i > 100) result++;
+			j++;
+		}
+	test_msg_end(result);
+
+	return result;
+}
 
 int test_linked_list()
 {
@@ -421,21 +439,6 @@ int test_sort_data_loc(int data[])
 	return result;
 }
 
-/* generate random number from min to max */
-int random_int(int min, int max)
-{
-	assert(min > INT_MIN);
-	assert(max < INT_MAX/2);
-	assert(max >= min);
-	return rand() % max + min;
-}
-
-/* use clock in system to create random seed for number generator */
-void seed_rand()
-{
-	srand(time(0));
-}
-
 /* set pre-selected data in array */
 void sort_set_array(int data[])
 {
@@ -456,7 +459,7 @@ void sort_set_array(int data[])
 void sort_rnd_data_fill(int *data, int length, int min, int max)
 {
 	int i = 0;
-	seed_rand();
+	random_seed();
 	while(i < length) {
 		data[i]= random_int(min, max);
 		i++;
@@ -478,7 +481,7 @@ int test_sort()
 
 	test_msg_start("Test Selection Sort - Random Data");
 		for(i = 0; i < SORT_TESTS; i++) {
-			seed_rand();
+			random_seed();
 			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
 			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
 			length = random_int(1, 1000); /* get length of a new array */
@@ -500,7 +503,7 @@ int test_sort()
 
 	test_msg_start("Test Insertion Sort - Random Data");
 		for(i = 0; i < SORT_TESTS; i++) {
-			seed_rand();
+			random_seed();
 			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
 			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
 			length = random_int(1, 1000); /* get length of a new array */
@@ -522,7 +525,7 @@ int test_sort()
 
 	test_msg_start("Test Quick Sort (Recursive) - Random Data");
 		for(i = 0; i < SORT_TESTS; i++) {
-			seed_rand();
+			random_seed();
 			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
 			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
 			length = random_int(1, 1000); /* get length of a new array */
@@ -544,7 +547,7 @@ int test_sort()
 
 	test_msg_start("Test Quick Sort - Random Data");
 		for(i = 0; i < SORT_TESTS; i++) {
-			seed_rand();
+			random_seed();
 			min_data_val = random_int(INT_MIN+1, (INT_MAX/2)-1);
 			max_data_val = random_int(min_data_val, (INT_MAX/2)-1);
 			length = random_int(1, 1000); /* get length of a new array */
@@ -560,9 +563,50 @@ int test_sort()
 	return result;
 }
 
-int test_stack_array()
+int test_hash()
 {
 	int result = 0;
+	Hash h;
+	test_msg_start("Test Hash - Prime Numbers");
+		if(is_prime(0)) result++;
+		if(is_prime(1)) result++;
+		if(!is_prime(2)) result++;
+		if(!is_prime(3571)) result++;
+		if(is_prime(3570)) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Twin Prime Numbers");
+		if(next_twinprime(6) != 7) result++;
+		if(next_twinprime(72) != 73) result++;
+		if(next_twinprime(1000) != 1021) result++;
+		if(next_twinprime(79154) != 79231) result++;
+		if(next_twinprime(INT_MAX) != -1) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Create New Hash");
+	 	h = hash_new_prime(100);
+	 	if(hash_empty(h) != 0) result++;
+	 	if(h.size != 103) result++;
+	 	if(h.data == NULL) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Insert and Verify Data");
+		hash_insert(h, "hello", 6);
+		if(hash_search(h, "hello", 6) == NULL) result++;
+		if(hash_search(h, "goodbye", 7) == NULL) result++;
+		if(hash_search(h, "", 0) == NULL) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Fill Hash and Clear Data");
+
+		if(hash_full(h) != 0) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Fill Hash and Remove Specific Data");
+	test_msg_end(result);
+
+	test_msg_start("Test Hash - Insert and Verify Data");
+	test_msg_end(result);
 
 	return result;
 }
@@ -570,11 +614,12 @@ int test_stack_array()
 int test_all()
 {
 	int result = 0;
+	result += test_random();
 	result += test_linked_list();
-	result += test_stack_array();
 	result += test_vstack();
 	result += test_vqueue();
 	result += test_sort();
+	result += test_hash();
 	return result;
 }
 

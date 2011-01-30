@@ -1,6 +1,6 @@
 CC = gcc
 
-OBJS = lib_test.o lib_ll.o lib_sort.o lib_vbtree.o
+OBJS = lib_test.o lib_hash.o lib_ll.o lib_random.o lib_sort.o lib_vbtree.o
 PROG = dstruct
 INSTALLDIR = /usr/local/bin
 
