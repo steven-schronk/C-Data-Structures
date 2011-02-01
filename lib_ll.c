@@ -98,6 +98,13 @@ List_Node *list_ins_tail(List_Head *pHead)
 	return pNode;
 }
 
+List_Node *list_ins_tail_data(List_Head *pHead, void *Data)
+{
+	List_Node *temp = list_ins_tail(pHead);
+	temp->pData = Data;
+	return temp;
+}
+
 List_Node *list_ins_before(List_Head *pHead, List_Node *pNode)
 {
 	List_Node *pTemp = pHead->pNext;
@@ -197,16 +204,15 @@ int list_rm_before(List_Head *pHead, List_Node *pNode)
 
 int list_copy(List_Head *pDest, List_Head *pSrc)
 {
-	List_Node *pNewNode = NULL, *pSrcNode = NULL;
+	int i = 1; /* start with head node */
+	List_Node *pTemp = NULL;
 	assert(pDest != NULL && pSrc != NULL);
-	pSrcNode = pSrc->pNext; /* first node from source */
-	if(pSrcNode == NULL) return 0; /* empty source list */
-	while (pSrcNode->pNext != NULL)
-	{
-		pNewNode = list_ins_tail(pDest);
-		if(pNewNode == NULL) { return 1; }
-		pNewNode->pData = pSrcNode->pData; /* copy data */
-		pSrcNode = pSrcNode->pNext; /* move to next pointer */
+	if(pSrc->count == 0) { return 0; } /* nothing to copy */
+	list_clear(pDest);
+	while (i <= pSrc->count) {
+		pTemp = list_get_num(pSrc, i);
+		list_ins_tail_data(pDest, pTemp->pData);
+		i++;
 	}
 	return 0;
 }
@@ -233,15 +239,12 @@ List_Node *list_get_num(List_Head *pHead, int count)
 {
 	int i = 1;
 	List_Node *pNode;
-	assert(count >= 0);
+	assert(count > 0);
 	assert(pHead != NULL);
-	if(count == 0) { return pHead->pNext; }
-	if(pHead->count == 0) { return NULL; }
+	if(pHead->count == 0) { return NULL; } /* list is empty */
+	if(count > pHead->count) { return NULL; } /* node does not exist */
 	pNode = pHead->pNext;
-	if(count == 1) { return pNode; }
-	while(i < count)
-	{
-		if(pNode->pNext == NULL) { return NULL; }
+	while(i < count) {
 		pNode = pNode->pNext;
 		i++;
 	}

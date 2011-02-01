@@ -447,21 +447,27 @@ int test_vqueue()
 	int i = 0;
 	char data[] = "T\n";
 	char *pCh;
-	Queue_Head *test_q = vq_new();
-	Queue_Node *temp_node1 = NULL, *temp_node2 = NULL;
+	Queue_Head *test_q1 = vq_new();
+	Queue_Head *test_q2 = vq_new();
+
+	Queue_Node *test_node1 = NULL;
+	Queue_Node *test_node2 = NULL;
+	Queue_Node *test_node3 = NULL;
+
+	Queue_Node *pTrack[5];
 
 	test_msg_start("Test Queue - Creating New Queue");
-		if(!test_q) result++;
+		if(!test_q1) result++;
 	test_msg_end(result);
 
 	test_msg_start("Test Queue - Pushing Data Into Queue");
 		while(data[i] != '\0')
 		{
-			temp_node1 = vq_enq(test_q);
+			test_node1 = vq_enq(test_q1);
 			/* reserve memory for node payload - pointer to memory in pData */
 			pCh = malloc(sizeof(char));
 			*pCh = data[i];
-			temp_node1->pData = pCh;
+			test_node1->pData = pCh;
 			i++;
 		}
 	test_msg_end(result);
@@ -470,38 +476,112 @@ int test_vqueue()
 		i = 0;
 		while(data[i] != '\n')
 		{
-			temp_node1 = vq_peek(test_q);
+			test_node1 = vq_peek(test_q1);
 			/* verify data of this node */
-			pCh = temp_node1->pData;
+			pCh = test_node1->pData;
 			if(*pCh != data[i]) result++;
-			vq_deq(test_q);
+			vq_deq(test_q1);
 			i++;
 		}
 	test_msg_end(result);
 
 	test_msg_start("Test Queue - Popping Data Off Empty Queue");
-		vq_clear(test_q);
-		if(vq_deq(test_q) != -1) result++;
+		vq_clear(test_q1);
+		if(vq_deq(test_q1) != -1) result++;
 	test_msg_end(result);
 
 	test_msg_start("Test Queue - Tracking Queue Size");
-		vq_clear(test_q);
-		if(vq_size(test_q) != 0) result++;
-		vq_enq(test_q);
-		if(vq_size(test_q) != 1) result++;
-		temp_node1 = vq_peek(test_q);
-		if(vq_size(test_q) != 1) result++;
-		vq_deq(test_q);
-		if(vq_size(test_q) != 0) result++;
+		vq_clear(test_q1);
+		if(vq_size(test_q1) != 0) result++;
+		vq_enq(test_q1);
+		if(vq_size(test_q1) != 1) result++;
+		test_node1 = vq_peek(test_q1);
+		if(vq_size(test_q1) != 1) result++;
+		vq_deq(test_q1);
+		if(vq_size(test_q1) != 0) result++;
 	test_msg_end(result);
 
 	test_msg_start("Test Queue - Tracking Node Address With Enqueue and Dequeue");
-		vq_clear(test_q); temp_node1 = NULL; temp_node2 = NULL;
-		temp_node1 = vq_enq(test_q);
-		temp_node2 = vq_enq(test_q);
-		if(vq_peek(test_q) != temp_node1) result++;
-		vq_deq(test_q);
-		if(vq_peek(test_q) != temp_node2) result++;
+		vq_clear(test_q1); test_node1 = NULL; test_node2 = NULL;
+		test_node1 = vq_enq(test_q1);
+		test_node2 = vq_enq(test_q1);
+		if(vq_peek(test_q1) != test_node1) result++;
+		vq_deq(test_q1);
+		if(vq_peek(test_q1) != test_node2) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Copying Queue");
+		vq_clear(test_q1);
+		vq_clear(test_q2);
+		test_node1 = vq_enq(test_q1);
+		test_node1->pData = &result;
+		test_node2 = vq_enq(test_q1);
+		if(vq_copy(test_q2, test_q1) != 0) result++;
+		if(test_q1->pNext == test_q2->pNext) result++;
+		if(test_q1->count != 2) result++;
+		if(test_q2->count != 2) result++;
+		if(test_q1->pNext->pData != test_q2->pNext->pData) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Copying Empty Queue");
+		vq_clear(test_q1);
+		vq_clear(test_q2);
+		if(vq_copy(test_q2, test_q1) != 0) result++;
+		if(test_q1->pNext != NULL) result++;
+		if(test_q2->pNext != NULL) result++;
+		if(test_q1->count != 0) result++;
+		if(test_q2->count != 0) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Get Node Address By Node Number - First Node");
+		vq_clear(test_q1);
+		test_node1 = vq_enq(test_q1);
+		test_node2 = vq_enq(test_q1);
+		test_node3 = vq_get_num(test_q1, 1);
+		if(test_node3 != test_node2) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Get Node Address By Node Number - Middle Node");
+		vq_clear(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		test_node2 = vq_enq(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		vq_enq(test_q1);
+		test_node3 = vq_get_num(test_q1, 5);
+		if(test_node3 != test_node2) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Get Node Address By Node Number - Last Node");
+		vq_clear(test_q2);
+		test_node1 = list_ins_tail(test_q2);
+		test_node2 = list_ins_tail(test_q2);
+		test_node3 = list_get_num(test_q2, 2);
+		if(test_node3 != test_node2) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Get Node Address By Node Number - Empty List");
+		vq_clear(test_q2);
+		test_node1 = vq_get_num(test_q2, 1);
+		if(test_node1 != NULL) result++;
+		test_node1 = vq_get_num(test_q2, 55);
+		if(test_node1 != NULL) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Queue - Swap Nodes In List");
+		vq_clear(test_q2);
+		test_node1 = vq_enq(test_q2);
+		test_node2 = vq_enq(test_q2);
+		test_node3 = vq_enq(test_q2);
+		pTrack[1] = test_node1->pNext;
+		pTrack[2] = test_node2->pNext;
+		if(vq_node_swap(test_node1, test_node2) != 0) result++;
+		if(test_node1->pNext != pTrack[2]) result++;
+		if(test_node2->pNext != pTrack[1]) result++;
 	test_msg_end(result);
 
 	return result;

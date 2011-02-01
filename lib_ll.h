@@ -59,6 +59,9 @@ List_Node *list_ins_head_data(List_Head *pHead, void *Data);
 /* push new node on tail of list */
 List_Node *list_ins_tail(List_Head *);
 
+/* push new node on tail of list - with data */
+List_Node *list_ins_tail_data(List_Head *pHead, void *Data);
+
 /* insert node before this node in list */
 List_Node *list_ins_before(List_Head *, List_Node *);
 

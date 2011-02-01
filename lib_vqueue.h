@@ -25,4 +25,19 @@
 /* delete and free contents of this queue */
 #define vq_delete(pHead) list_delete(pHead)
 
+/* make a deep copy of queue */
+#define vq_copy(pDest, pSrc) list_copy(pDest, pSrc)
+
+/* print out contents of queue to stdout */
+#define vq_print(pHead) list_print(pHead)
+
+/* get address of node at num - first node is 1 */
+#define vq_get_num(pHead, count) list_get_num(pHead, count)
+
+/* reverse current nodes - modify pointer to next in each */
+#define vq_node_swap(pPrev, pCurr) list_node_swap(pPrev, pCurr)
+
+/* reverse contents of list */
+#define vq_reverse(pHead) list_reverse(pHead)
+
 #endif /* LIB_VQUEUE_H_ */
