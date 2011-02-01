@@ -50,9 +50,6 @@ List_Node *list_search(List_Head *);
 /* return address of end of list */
 List_Node *list_tail(List_Head *);
 
-/* print list contents and details */
-void list_print(List_Head *);
-
 /* push new node on head of list */
 List_Node *list_ins_head(List_Head *);
 
@@ -75,6 +72,21 @@ int list_rm_node(List_Head *pHead, List_Node *);
 	returns 1 if ok, -1 list empty or did not contain specified node
 */
 int list_rm_before(List_Head *pHead, List_Node *);
+
+/* make a deep copy of list */
+int list_copy(List_Head *pDest, List_Head *pSrc);
+
+/* print out contents of list to stdout */
+void list_print(List_Head *pHead);
+
+/* get address of node at num - first node is 1 */
+List_Node *list_get_num(List_Head *pHead, int count);
+
+/* reverse current nodes - modify pointer to next in each */
+int list_node_swap(List_Node *pPrev, List_Node *pCurr);
+
+/* reverse contents of list */
+List_Head *list_reverse(List_Head *pHead);
 
 /* remove all nodes in list and free memory for each node */
 void list_clear(List_Head *);

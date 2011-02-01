@@ -44,9 +44,24 @@ Hash hash_new_prime(int len)
 	return h;
 }
 
+int hash_data(void *data, int num, size_t size)
+{
+	int slot = 0;
+	while(num >= 0)
+	{
+		/* slot += (void *) (data) + (num * size); */
+		slot += (int)data + size * num;
+		num--;
+	}
+	return slot;
+}
+
 int hash_insert(Hash h, void * data, size_t length)
 {
+	int slot;
 	assert(data != NULL);
+	/*slot = hash_data(data, length);
+	if(h[slot]->data == NULL) *//* insert data in first node */;
 
 	return 0;
 }
@@ -86,29 +101,3 @@ void hash_delete(Hash h)
 {
 	free(&h);
 }
-
-
-/*
-
-int main()
-{
-	int j, loc, distinct, key, num[N + 1];
-	FILE * in = fopen("numbers.in", "r");
-	for(j = 1; j <= N; j++)
-		num[j] = Empty;
-	distinct = 0;
-	while(fscanf(in, "%d", &key) == 1) {
-		loc = loc % N + 1;
-		if(num[loc] == Empty) {
-			if(distinct == MaxNumbers) {
-				printf("\nTable Full: %d not added\n", key);
-				exit(1);
-			}
-			num[loc] = key;
-			distinct++;
-		}
-	}
-	printf("\nThere are %d distinct numbers\n", distinct);
-	fclose(in);
-}
-*/
