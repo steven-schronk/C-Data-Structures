@@ -34,14 +34,22 @@ void list_delete(List_Head *pHead)
 
 int list_len(List_Head *pHead)
 {
+	assert(pHead != NULL);
 	if (pHead == NULL) return -1;
 	return pHead->count;
 }
 
-List_Node *list_search(List_Head *pHead)
+int list_search(List_Head *pHead, List_Node *pNode)
 {
-	pHead++; /* junk code */
-	return NULL;
+	List_Node *pTemp = NULL;
+	assert(pHead != NULL);
+	if(pHead->count == 0) return 0;
+	pTemp = pHead->pNext;
+	while(pTemp->pNext != NULL) {
+		if(pTemp == pNode) return 1;
+		pTemp = pTemp->pNext;
+	}
+	return 0;
 }
 
 List_Node *list_tail(List_Head *pHead)
@@ -273,6 +281,55 @@ List_Head *list_reverse(List_Head *pHead)
 	list_delete(pHead);
 	return newList;
 }
+
+void list_append(List_Head *pLo, List_Head *pHi)
+{
+	List_Node *pTemp = NULL;
+	assert(pLo != NULL && pHi != NULL);
+	pTemp = list_tail(pLo);
+	pTemp->pNext = pHi->pNext;
+	pLo->count = pLo->count + pHi->count;
+}
+
+int list_data_array(List_Head *pHead, void *pArr[], int len)
+{
+	int i = 0;
+	List_Node *pTemp = NULL;
+	assert(pHead != NULL);
+	assert(pArr != NULL);
+	assert(len > 0);
+	for(i = 0; i < len; i++) /* reset array */
+		pArr[i] = NULL;
+	if(pHead->count == 0) return 1;
+	pTemp = pHead->pNext;
+	i = 0;
+	while(pTemp != NULL) {
+		pArr[i++] = pTemp->pData;
+		pTemp = pTemp->pNext;
+	}
+	return 0;
+}
+
+int list_node_array(List_Head *pHead, void *pArr[], int len)
+{
+	int i = 0;
+	List_Node *pTemp = NULL;
+	assert(pHead != NULL);
+	assert(pArr != NULL);
+	assert(len > 0);
+	for(i = 0; i < len; i++) /* reset array */
+		pArr[i] = NULL;
+	if(pHead->count == 0) return 1;
+	pTemp = pHead->pNext;
+	i = 0;
+	while(pTemp != NULL){
+		pArr[i++] = pTemp;
+		pTemp = pTemp->pNext;
+	}
+	return 0;
+}
+
+/* void* tempArray = malloc(width*elementsNeeded); */
 
 void list_clear(List_Head *pHead)
 {

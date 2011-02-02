@@ -75,6 +75,7 @@ int test_linked_list()
 	List_Node *test_node2 = NULL;
 	List_Node *test_node3 = NULL;
 	List_Node *pTrack[5];
+	void* pArr[6];
 
 	List_Head *test_list1 = list_new();
 	List_Head *test_list2 = list_new();
@@ -370,6 +371,63 @@ int test_linked_list()
 
 	test_msg_start("Test Linked List - List Head Preprocessor");
 		if(list_head(test_list1) != test_node1) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Linked List - Append Lists - Pointer Tracking");
+		list_clear(test_list1);
+		list_clear(test_list2);
+		list_ins_tail(test_list1);
+		list_ins_tail(test_list1);
+		list_ins_tail(test_list1);
+		pTrack[0] = list_ins_tail(test_list1);
+		pTrack[1] = list_ins_tail(test_list2);
+		list_ins_tail(test_list2);
+		list_ins_tail(test_list2);
+		list_append(test_list1, test_list2);
+		if(test_list1->count != 7) result++;
+		if(!list_search(test_list1, pTrack[0])) result++;
+		if(!list_search(test_list1, pTrack[1])) result++;
+		if(pTrack[0] != list_get_num(test_list1, 4)) result++;
+		if(pTrack[1] != list_get_num(test_list1, 5)) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Linked List - Create Data Array - Pointer Tracking");
+		list_clear(test_list1);
+		pTrack[0] = list_ins_tail(test_list1);
+		pTrack[0] = pTrack[0]->pData = &test_list1;
+		pTrack[1] = list_ins_tail(test_list1);
+		pTrack[1] = pTrack[1]->pData = &test_list2;
+		pTrack[2] = list_ins_tail(test_list1);
+		pTrack[2] = pTrack[2]->pData = &pTrack;
+		pTrack[3] = list_ins_tail(test_list1);
+		pTrack[3] = pTrack[3]->pData = &test_node1;
+		pTrack[4] = list_ins_tail(test_list1);
+		pTrack[4] = pTrack[4]->pData = &test_node2;
+		pArr[5] = &test_list1;
+		if(list_data_array(test_list1, pArr, 6) != 0) result++;
+		if(pArr[0] != pTrack[0]) result++;
+		if(pArr[1] != pTrack[1]) result++;
+		if(pArr[2] != pTrack[2]) result++;
+		if(pArr[3] != pTrack[3]) result++;
+		if(pArr[4] != pTrack[4]) result++;
+		if(pArr[5] != NULL) result++;
+	test_msg_end(result);
+
+	test_msg_start("Test Linked List - Create Node Array - Pointer Tracking");
+		list_clear(test_list1);
+		pTrack[0] = list_ins_tail(test_list1);
+		pTrack[1] = list_ins_tail(test_list1);
+		pTrack[2] = list_ins_tail(test_list1);
+		pTrack[3] = list_ins_tail(test_list1);
+		pTrack[4] = list_ins_tail(test_list1);
+		pArr[5] = &test_list1;
+		if(list_node_array(test_list1, pArr, 6) != 0) result++;
+		if(pArr[0] != pTrack[0]) result++;
+		if(pArr[1] != pTrack[1]) result++;
+		if(pArr[2] != pTrack[2]) result++;
+		if(pArr[3] != pTrack[3]) result++;
+		if(pArr[4] != pTrack[4]) result++;
+		if(pArr[5] != NULL) result++;
 	test_msg_end(result);
 
 	return result;

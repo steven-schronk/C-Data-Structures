@@ -44,8 +44,8 @@ void list_delete(List_Head *);
 */
 int list_len(List_Head *);
 
-/* search through list */
-List_Node *list_search(List_Head *);
+/* search through list for pointer to node*/
+int list_search(List_Head *pHead, List_Node *pNode);
 
 /* return address of end of list */
 List_Node *list_tail(List_Head *);
@@ -90,6 +90,15 @@ int list_node_swap(List_Node *pPrev, List_Node *pCurr);
 
 /* reverse contents of list */
 List_Head *list_reverse(List_Head *pHead);
+
+/* append high list to last node of low list - does not modify pHi list */
+void list_append(List_Head *pLo, List_Head *pHi);
+
+/* return an array of pointers to data payload in list - does not modify list */
+int list_data_array(List_Head *pHead, void *pArr[], int len);
+
+/* return an array of pointers to nodes in list - does not modify list */
+int list_node_array(List_Head *pHead, void *pArr[], int len);
 
 /* remove all nodes in list and free memory for each node */
 void list_clear(List_Head *);
