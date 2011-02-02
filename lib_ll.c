@@ -45,7 +45,7 @@ int list_search(List_Head *pHead, List_Node *pNode)
 	assert(pHead != NULL);
 	if(pHead->count == 0) return 0;
 	pTemp = pHead->pNext;
-	while(pTemp->pNext != NULL) {
+	while(pTemp != NULL) {
 		if(pTemp == pNode) return 1;
 		pTemp = pTemp->pNext;
 	}
@@ -328,8 +328,6 @@ int list_node_array(List_Head *pHead, void *pArr[], int len)
 	}
 	return 0;
 }
-
-/* void* tempArray = malloc(width*elementsNeeded); */
 
 void list_clear(List_Head *pHead)
 {

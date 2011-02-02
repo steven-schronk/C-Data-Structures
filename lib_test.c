@@ -430,6 +430,29 @@ int test_linked_list()
 		if(pArr[5] != NULL) result++;
 	test_msg_end(result);
 
+	test_msg_start("Test Linked List - Search List");
+		list_clear(test_list1);
+		if(list_search(test_list1, test_node1) != 0) result++;
+		test_node1 = list_ins_head(test_list1);
+		if(list_search(test_list1, test_node1) != 1) result++;
+		if(list_search(test_list1, test_node2) != 0) result++;
+		if(list_search(test_list1, test_node3) != 0) result++;
+		if(list_search(test_list1, NULL) != 0) result++;
+		if(list_search(test_list1, (List_Node *)test_list1) != 0) result++;
+		test_node2 = list_ins_head(test_list1);
+		if(list_search(test_list1, test_node1) != 1) result++;
+		if(list_search(test_list1, test_node2) != 1) result++;
+		if(list_search(test_list1, test_node3) != 0) result++;
+		if(list_search(test_list1, NULL) != 0) result++;
+		if(list_search(test_list1, (List_Node *)test_list1) != 0) result++;
+		list_clear(test_list1);
+		if(list_search(test_list1, test_node1) != 0) result++;
+		if(list_search(test_list1, test_node2) != 0) result++;
+		if(list_search(test_list1, test_node3) != 0) result++;
+		if(list_search(test_list1, NULL) != 0) result++;
+		if(list_search(test_list1, (List_Node *)test_list1) != 0) result++;
+	test_msg_end(result);
+
 	return result;
 }
 
