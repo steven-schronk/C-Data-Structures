@@ -28,4 +28,22 @@
 /* delete and free contents of this queue */
 #define vstack_delete(pHead) list_delete(pHead)
 
+/* make a deep copy of list */
+#define vstack_copy(pHead) list_copy(pDest, pSrc)
+
+/* print out contents of list to stdout */
+#define vstack_print(pHead) list_print(pHead)
+
+/* reverse contents of list */
+#define vstack_reverse(pHead) list_reverse(pHead)
+
+/* append high list to last node of low list - does not modify pHi list */
+#define vstack_append(pLo, pHi) list_append(pLo, pHi)
+
+/* return an array of pointers to data payload in list - does not modify list */
+#define vstack_data_array(pHead, pArr, len) list_data_array(pHead, pArr, len)
+
+/* return an array of pointers to nodes in list - does not modify list */
+#define vstack_node_array(pHead, pArr, len) list_node_array(pHead, pArr, len)
+
 #endif /* LIB_VSTACK_H_ */
